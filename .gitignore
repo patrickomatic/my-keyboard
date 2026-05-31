@@ -10,3 +10,4 @@ zmk/
 *.elf
 *.hex
 *.bin
+*.generated
