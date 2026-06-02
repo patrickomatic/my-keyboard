@@ -35,7 +35,7 @@ help:
 	@printf "  make right            Build right half firmware\n"
 	@printf "  make reset            Build settings reset firmware\n"
 	@printf "  make convert          Convert the Planck QMK source to a ZMK Corne keymap ($(CONVERTED_KEYMAP))\n"
-	@printf "  make layout           Print the Planck source layout table\n"
+	@printf "  make layout           Print the current ZMK keymap layout table\n"
 	@printf "  make clean            Remove local build output and west workspace files\n"
 
 install-deps: check-docker install-qmk2zmk
@@ -77,8 +77,7 @@ convert: install-qmk2zmk
 	@printf "Converted keymap written to %s\n" "$(CONVERTED_KEYMAP)"
 
 layout: install-qmk2zmk
-	unzip -p "$(PLANCK_SOURCE_ZIP)" "$(PLANCK_KEYMAP_C)" | \
-		$(QMK2ZMK) --print-layout --keyboard planck -f c /dev/stdin
+	tools/bin/zmk2qmk --print-layout --keyboard corne config/corne.keymap
 
 clean:
 	rm -rf build .west modules tools zephyr bootloader zmk
