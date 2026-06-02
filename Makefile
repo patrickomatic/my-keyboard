@@ -77,7 +77,7 @@ convert: install-qmk2zmk
 	@printf "Converted keymap written to %s\n" "$(CONVERTED_KEYMAP)"
 
 layout: install-qmk2zmk
-	tools/bin/zmk2qmk --print-layout --keyboard corne config/corne.keymap
+	tools/bin/zmk2qmk --print-layout --cols 12 config/corne.keymap
 
 clean:
 	rm -rf build .west modules tools zephyr bootloader zmk
