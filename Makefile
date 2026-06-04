@@ -95,8 +95,8 @@ flash: left right
 	@until [ -d /Volumes/NICENANO ]; do sleep 1; done
 	@printf "Found NICENANO — flashing left half...\n"
 	@dd if=build/left/zephyr/zmk.uf2 of=/Volumes/NICENANO/zmk.uf2 2>/dev/null; true
-	@printf "Left half done. Move the USB cable to the RIGHT half, then press Enter...\n"
-	@read _
+	@printf "Left half done. Move the USB cable to the RIGHT half (continuing in 5s)...\n"
+	@sleep 5
 	@printf "Double-tap the reset button on the RIGHT half, then wait...\n"
 	@until [ -d /Volumes/NICENANO ]; do sleep 1; done
 	@printf "Found NICENANO — flashing right half...\n"
