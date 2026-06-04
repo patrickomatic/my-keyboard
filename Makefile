@@ -27,7 +27,7 @@ PLANCK_SOURCE_ZIP  := zsa_planck_ez_glow_aq6j5_Ja0DwO_planck_source.zip
 PLANCK_KEYMAP_C    := zsa_planck_ez_glow_planck_source/keymap.c
 CONVERTED_KEYMAP   := config/corne.keymap.generated
 
-.PHONY: all help install-deps install-qmk2zmk setup build left right reset convert layout flash-left flash-right flash-reset clean check-docker
+.PHONY: all help install-deps install-qmk2zmk setup build left right reset convert layout flash flash-left flash-right flash-reset clean check-docker
 
 all: install-deps build
 
@@ -43,6 +43,7 @@ help:
 	@printf "  make reset            Build settings reset firmware\n"
 	@printf "  make convert          Convert the Planck QMK source to a ZMK Corne keymap ($(CONVERTED_KEYMAP))\n"
 	@printf "  make layout           Print the current ZMK keymap layout table\n"
+	@printf "  make flash            Flash firmware to both halves in sequence\n"
 	@printf "  make flash-left       Flash firmware to the left half\n"
 	@printf "  make flash-right      Flash firmware to the right half\n"
 	@printf "  make flash-reset      Flash settings reset firmware (run on both halves to clear pairing)\n"
@@ -88,6 +89,19 @@ convert: install-qmk2zmk
 
 layout: install-qmk2zmk
 	tools/bin/zmk2qmk --print-layout --cols 12 config/corne.keymap
+
+flash: left right
+	@printf "Double-tap the reset button on the LEFT half, then wait...\n"
+	@until [ -d /Volumes/NICENANO ]; do sleep 1; done
+	@printf "Found NICENANO — flashing left half...\n"
+	@dd if=build/left/zephyr/zmk.uf2 of=/Volumes/NICENANO/zmk.uf2 2>/dev/null; true
+	@printf "Left half done. Move the USB cable to the RIGHT half, then press Enter...\n"
+	@read _
+	@printf "Double-tap the reset button on the RIGHT half, then wait...\n"
+	@until [ -d /Volumes/NICENANO ]; do sleep 1; done
+	@printf "Found NICENANO — flashing right half...\n"
+	@dd if=build/right/zephyr/zmk.uf2 of=/Volumes/NICENANO/zmk.uf2 2>/dev/null; true
+	@printf "Done.\n"
 
 flash-left: left
 	@printf "Double-tap the reset button on the LEFT half, then wait...\n"
